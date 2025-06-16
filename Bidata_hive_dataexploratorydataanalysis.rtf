@@ -1,0 +1,131 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2822
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\froman\fcharset0 TimesNewRomanPSMT;\f1\froman\fcharset0 TimesNewRomanPS-BoldMT;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww29200\viewh18400\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs24 \cf0 \expnd0\expndtw0\kerning0
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab20\sl360\slmult1\partightenfactor0
+\cf2 \kerning1\expnd0\expndtw0 #
+\f1\b Hive table creation and schema definition for the dataset:
+\f0\b0 \cf0 \expnd0\expndtw0\kerning0
+\
+\pard\pardeftab720\partightenfactor0
+\cf0 CREATE EXTERNAL TABLE  ecommerce_user_events (\
+    event_time STRING,\
+    event_type STRING,\
+    product_id BIGINT,\
+    category_id STRING,\
+    category_code STRING,\
+    brand STRING,\
+    price DOUBLE,\
+    user_id BIGINT,\
+    user_session STRING\
+)\
+ROW FORMAT DELIMITED\
+FIELDS TERMINATED BY ','\
+STORED AS TEXTFILE\
+LOCATION 'gs://bigdataassignment01/ecommerce_csv/'\
+TBLPROPERTIES ("skip.header.line.count"="1");\
+\
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf0 \
+\pard\pardeftab720\sa280\partightenfactor0
+\cf0 # HIVE:\
+# Exploratory data analysis\
+\pard\pardeftab720\partightenfactor0
+
+\f0\b0 \cf0 # 1. Total number of records:
+\f1\b \
+\pard\pardeftab720\sa280\partightenfactor0
+\cf0 SELECT COUNT(*) AS total_records FROM 
+\f0\b0 \cf2 \kerning1\expnd0\expndtw0 ecommerce_user_events
+\f1\b \cf0 \expnd0\expndtw0\kerning0
+;\
+\pard\pardeftab720\partightenfactor0
+
+\f0\b0 \cf0 # 2. \cf2 \kerning1\expnd0\expndtw0 Number of records by event type:\
+SELECT event_type, COUNT(*) AS count_by_event_type\
+FROM ecommerce_user_events\
+GROUP BY event_type\
+ORDER BY count_by_event_type DESC;\
+\
+# 3. Number of null values in brand column:\
+SELECT COUNT(*) AS null_brand_count\
+FROM ecommerce_user_events\
+WHERE brand IS NULL;\
+\
+# 4.\cf0 \expnd0\expndtw0\kerning0
+Number of distinct brands:\
+SELECT COUNT(DISTINCT brand) AS distinct_brands FROM ecommerce_user_events;\
+\
+# 5. Top 10 brands that are most frequent:\
+SELECT brand, COUNT(*) AS frequency\
+FROM ecommerce_user_events\
+GROUP BY brand\
+ORDER BY frequency DESC\
+LIMIT 10;\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab20\sl360\slmult1\partightenfactor0
+\cf2 \kerning1\expnd0\expndtw0 # 6. Count of records for top 10 category code:\
+SELECT category_code, COUNT(*) AS count_per_category\
+FROM ecommerce_user_events\
+GROUP BY category_code\
+ORDER BY count_per_category DESC\
+LIMIT 10;\
+\
+
+\f1\b\fs26 # Summary statistics:
+\f0\b0\fs24 \
+\
+# 1. Basic statistics for the price column (average, min, max):\
+SELECT AVG(price) AS avg_price,\
+       MIN(price) AS min_price,\
+       MAX(price) AS max_price\
+FROM ecommerce_user_events;\
+\
+\
+# 2.Statistics of price column grouped by event type:\
+SELECT event_type,\
+       AVG(price) AS avg_price,\
+       MIN(price) AS min_price,\
+       MAX(price) AS max_price\
+FROM ecommerce_user_events\
+GROUP BY event_type;\
+\
+\pard\pardeftab720\partightenfactor0
+\cf0 \expnd0\expndtw0\kerning0
+# 3.Standard deviation of price column:\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab20\sl360\slmult1\partightenfactor0
+\cf2 \kerning1\expnd0\expndtw0 SELECT STDDEV(price) AS price_stddev\
+FROM ecommerce_user_events;\cf0 \expnd0\expndtw0\kerning0
+\
+\pard\pardeftab720\partightenfactor0
+\cf2 \kerning1\expnd0\expndtw0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab20\sl360\slmult1\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\
+\pard\pardeftab720\partightenfactor0
+\cf2 \ul \ulc2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab20\sl360\slmult1\partightenfactor0
+
+\f1\b \cf0 \expnd0\expndtw0\kerning0
+\ulnone \
+\pard\pardeftab720\sa280\partightenfactor0
+\cf0 \
+\
+\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0 \cf0 \
+\pard\pardeftab720\partightenfactor0
+\cf0 \
+\
+\
+}
